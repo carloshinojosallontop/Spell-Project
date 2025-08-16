@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import upcastIcon from "src/assets/icons/other/upcast.png";
 import styles from "./spell-details.module.css";
@@ -11,32 +11,68 @@ type Props = {
 
 export function SpellDetailsDialog({ spell, onClose }: Props) {
   const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  // IDs accesibles estables por spell
   const titleId = useMemo(() => `spell-title-${spell.id}`, [spell.id]);
   const descId = useMemo(() => `spell-desc-${spell.id}`, [spell.id]);
 
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
+  // Helpers
+  const focusAutofocus = useCallback(() => {
+    const el = dialogRef.current?.querySelector<HTMLElement>("[data-autofocus]");
+    try {
+      el?.focus({ preventScroll: true });
+    } catch {
+      el?.focus();
+    }
+  }, []);
+
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         onClose();
       }
-    };
-    document.addEventListener("keydown", handleKey);
+    },
+    [onClose]
+  );
+
+  const onBackdropMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) onClose();
+    },
+    [onClose]
+  );
+
+  // Montaje: listener de ESC + lock scroll + foco inicial
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeydown);
+
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const to = setTimeout(() => {
-      dialogRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus();
-    }, 0);
-    return () => {
-      clearTimeout(to);
-      document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [onClose]);
 
-  const onBackdropMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
-  };
+    // Foco tras pintar (rAF es más fiable que setTimeout(0))
+    const raf1 = requestAnimationFrame(() => {
+      const raf2 = requestAnimationFrame(focusAutofocus);
+      // guard para limpiar el segundo
+      (focusAutofocus as any)._raf2 = raf2;
+    });
+
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+      document.body.style.overflow = prevOverflow;
+
+      cancelAnimationFrame(raf1);
+      if ((focusAutofocus as any)._raf2) {
+        cancelAnimationFrame((focusAutofocus as any)._raf2);
+      }
+    };
+  }, [handleKeydown, focusAutofocus]);
+
+  // Type guards suaves para damage
+  const damageList = useMemo(() => {
+    const arr = Array.isArray(spell.damage) ? spell.damage : [];
+    return arr as Array<Partial<{ dice: string; damageType: string }>>;
+  }, [spell.damage]);
 
   return createPortal(
     <div className={styles.backdrop} onMouseDown={onBackdropMouseDown}>
@@ -50,12 +86,28 @@ export function SpellDetailsDialog({ spell, onClose }: Props) {
       >
         <header className={styles.header}>
           <div className={styles.titleBlock}>
-            <img src={spell.icon} alt="" className={styles.icon} />
-            <h2 id={titleId} className={styles.title}>{spell.name}</h2>
+            <img
+              src={spell.icon}
+              alt=""
+              className={styles.icon}
+              loading="lazy"
+              decoding="async"
+            />
+            <h2 id={titleId} className={styles.title}>
+              {spell.name}
+            </h2>
             {spell.upcast && (
-              <img src={upcastIcon} alt="Upcast" title="Upcast" className={styles.upcast} />
+              <img
+                src={upcastIcon}
+                alt="Upcast"
+                title="Upcast"
+                className={styles.upcast}
+                loading="lazy"
+                decoding="async"
+              />
             )}
           </div>
+
           <button
             className={styles.close}
             onClick={onClose}
@@ -65,30 +117,55 @@ export function SpellDetailsDialog({ spell, onClose }: Props) {
             ×
           </button>
         </header>
+
         <div id={descId} className={styles.content}>
           <section className={styles.meta}>
-            <div className={styles.metaItem}><span>Level</span><strong>{spell.level}</strong></div>
-            <div className={styles.metaItem}><span>Action</span><strong>{spell.action}</strong></div>
-            <div className={styles.metaItem}><span>Duration</span><strong>{spell.duration}</strong></div>
-            <div className={styles.metaItem}><span>Range</span><strong>{spell.range}</strong></div>
-            <div className={styles.metaItem}><span>Type</span><strong>{spell.type}</strong></div>
+            <div className={styles.metaItem}>
+              <span>Level</span>
+              <strong>{spell.level}</strong>
+            </div>
+            <div className={styles.metaItem}>
+              <span>Action</span>
+              <strong>{spell.action}</strong>
+            </div>
+            <div className={styles.metaItem}>
+              <span>Duration</span>
+              <strong>{spell.duration}</strong>
+            </div>
+            <div className={styles.metaItem}>
+              <span>Range</span>
+              <strong>{spell.range}</strong>
+            </div>
+            <div className={styles.metaItem}>
+              <span>Type</span>
+              <strong>{spell.type}</strong>
+            </div>
           </section>
-          {Array.isArray(spell.damage) && spell.damage.length > 0 ? (
+
+          {damageList.length > 0 && (
             <section className={styles.damage} aria-label="Daño">
               <h3 className={styles.sectionTitle}>Damage</h3>
               <ul className={styles.damageList}>
-                {spell.damage.map((d, i) => (
+                {damageList.map((d, i) => (
                   <li key={i} className={styles.damageItem}>
-                    {"dice" in d ? <span className={styles.badge}>{(d as any).dice}</span> : null}
-                    {"damageType" in d ? <span className={styles.badgeSecondary}>{(d as any).damageType}</span> : null}
+                    {d.dice ? <span className={styles.badge}>{d.dice}</span> : null}
+                    {d.damageType ? (
+                      <span className={styles.badgeSecondary}>{d.damageType}</span>
+                    ) : null}
                   </li>
                 ))}
               </ul>
             </section>
-          ) : null}
+          )}
         </div>
+
         <footer className={styles.footer}>
-          <a className={styles.link} href={spell.url} target="_blank" rel="noreferrer noopener">
+          <a
+            className={styles.link}
+            href={spell.url}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
             Ver en wiki ↗
           </a>
         </footer>

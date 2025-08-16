@@ -1,4 +1,4 @@
-@import './pulse.css';
+@import "./pulse.css";
 
 .spell {
   position: relative;
@@ -11,7 +11,7 @@
   --box-shadow-highlight: 0 0 5px var(--accent, var(--gold-accent)),
     0 0 10px rgba(255, 255, 255, 0.3);
 
-    /*cambio de estilos*/
+  /*cambio de estilos*/
   &.highlighted:hover {
     background-color: var(--ink-dark);
     box-shadow: var(--box-shadow-highlight);
@@ -66,12 +66,10 @@
   }
 }
 
-/* (a) Quitar el marco negro por defecto del navegador al enfocar */
 .spell:focus {
   outline: none;
 }
 
-/* (b) MISMO efecto animado (sombra + pulso) cuando hay FOCUS por teclado */
 body[data-modality="keyboard"] .spell:focus {
   background-color: var(--ink-dark);
   box-shadow: var(--box-shadow-highlight);
@@ -79,8 +77,6 @@ body[data-modality="keyboard"] .spell:focus {
   animation: pulse 2s infinite ease-in-out;
 }
 
-/* (c) MISMO efecto animado (sombra + pulso) en HOVER,
-      pero solo cuando NO estamos en modo teclado */
 body:not([data-modality="keyboard"]) .spell.highlighted:hover {
   background-color: var(--ink-dark);
   box-shadow: var(--box-shadow-highlight);

@@ -1,0 +1,60 @@
+.main {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: var(--bg);
+}
+
+.card {
+  width: min(92vw, 640px);
+  background: var(--bg-light);
+  color: var(--ink-dark);
+  border: 2px solid var(--bg-dark);
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.15);
+  text-align: center;
+  padding: 2rem;
+}
+
+.code {
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: .05em;
+  color: var(--ink-dark);
+}
+
+.title {
+  margin: .25rem 0 0;
+  font-size: 1.5rem;
+}
+
+.desc {
+  margin: .5rem 0 1.5rem;
+  color: var(--ink-medium);
+}
+
+.actions {
+  display: flex;
+  gap: .75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn,
+.linkBtn {
+  appearance: none;
+  border: 1px solid var(--bg-dark);
+  background: var(--bg);
+  color: var(--ink-dark);
+  padding: .6rem 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover,
+.linkBtn:hover {
+  box-shadow: 0 0 0 3px var(--bg-dark);
+}

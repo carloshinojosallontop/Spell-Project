@@ -1,42 +1,27 @@
-import { useState } from "react";
-import { ClassGrid } from "src/components/class-grid";
-import { SpellDiagram } from "src/components/spell-diagram";
+import { Routes, Route } from "react-router-dom";
+import Home from "src/pages/Home";
+import ClassPage from "src/pages/classpage";
+import NotFound from "src/pages/NotFound";
 
-import type { ClassId } from "src/models/character-class";
-
-import styles from "./app.module.css";
+import { useRouteLoading } from "src/hooks/useRouteLoading"; // ⬅️ NUEVO
+import { RouteLoader } from "src/components/RouteLoader"; // ⬅️ NUEVO
 
 export function App() {
-  const [selectedClass, setSelectedClass] = useState<ClassId>();
-  const [highlightedClass, setHighlightedClass] = useState<ClassId>();
-  const background = selectedClass ? "classGrid" : "spellDiagram";
-
-  const onKeyDown = (event: React.KeyboardEvent) => {
-    if (
-      (event.key === "Escape" || event.key === "Backspace") &&
-      selectedClass
-    ) {
-      event.preventDefault();
-      setSelectedClass(undefined);
-      setHighlightedClass(undefined);
-      return;
-    }
-  };
+  const loading = useRouteLoading({
+    delayBeforeShow: 120, // ajustable
+    minVisible: 380, // ajustable (similar a tus 400ms)
+  });
 
   return (
-    <main className={styles.main} onKeyDown={onKeyDown}>
-      <SpellDiagram
-        highlightedClass={highlightedClass}
-        selectedClass={selectedClass}
-        background={background === "spellDiagram"}
-      />
+    <>
+      <RouteLoader active={loading} />
 
-      <ClassGrid
-        selectedClass={selectedClass}
-        background={background === "classGrid"}
-        highlight={setHighlightedClass}
-        onClick={setSelectedClass}
-      />
-    </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path=":classId" element={<ClassPage />} />
+        <Route path=":classId/:spellId" element={<ClassPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

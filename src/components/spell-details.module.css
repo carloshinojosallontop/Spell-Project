@@ -1,0 +1,144 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--ink-dark) 60%, transparent);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.dialog {
+  width: min(720px, 92vw);
+  max-height: min(84vh, 900px);
+  overflow: auto;
+  background: var(--bg-light);
+  color: var(--ink-dark);
+  border: 2px solid var(--bg-dark);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  border-radius: 18px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--bg-dark);
+  background: linear-gradient(180deg, var(--bg), var(--bg-light));
+}
+
+.titleBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+.upcast {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+  background-color: #4a3728;
+}
+
+.close {
+  appearance: none;
+  border: 1px solid var(--bg-dark);
+  background: var(--bg);
+  color: var(--ink-dark);
+  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+.close:hover {
+  box-shadow: 0 0 0 3px var(--bg-dark);
+}
+
+.content {
+  padding: 1rem 1.25rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.metaItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px dashed var(--bg-dark);
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  background: var(--bg);
+}
+.metaItem > span {
+  color: var(--ink-light);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+  color: var(--ink-medium);
+}
+.damageList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.damageItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ink-dark);
+  color: var(--bg-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.badgeSecondary {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--gold-accent);
+  color: var(--ink-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.footer {
+  padding: 0.75rem 1.25rem 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+}
+.link {
+  color: var(--ink-dark);
+  text-decoration: none;
+  border: 1px solid var(--bg-dark);
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  background: var(--bg);
+}
+.link:hover {
+  box-shadow: 0 0 0 3px var(--bg-dark);
+}

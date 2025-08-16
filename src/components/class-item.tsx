@@ -1,16 +1,14 @@
+
 import c from "classnames";
 import { useEffect } from "react";
 import { ACCENT_COLOR, DEFAULT_ACCENT_COLOR } from "src/data/accent-colors";
-
 import bardIcon from "src/assets/icons/classes/bard.png";
 import clericIcon from "src/assets/icons/classes/cleric.png";
 import druidIcon from "src/assets/icons/classes/druid.png";
 import sorcererIcon from "src/assets/icons/classes/sorcerer.png";
 import warlockIcon from "src/assets/icons/classes/warlock.png";
 import wizardIcon from "src/assets/icons/classes/wizard.png";
-
 import type { ClassId } from "src/models/character-class";
-
 import styles from "./class-grid.module.css";
 
 const ASSETS: Record<ClassId, string> = {
@@ -42,41 +40,24 @@ export function ClassGridItem({
 }: Props) {
   const accentColor = ACCENT_COLOR[classId];
 
-  useEffect(
-    function setAccentColorWhenSelected() {
-      if (selected && accentColor) {
-        document.documentElement.style.setProperty("--accent", accentColor);
-        return () => {
-          document.documentElement.style.setProperty(
-            "--accent",
-            DEFAULT_ACCENT_COLOR
-          );
-        };
-      }
-    },
-    [selected, accentColor]
-  );
+  useEffect(() => {
+    if (selected && accentColor) {
+      document.documentElement.style.setProperty("--accent", accentColor);
+      return () => {
+        document.documentElement.style.setProperty("--accent", DEFAULT_ACCENT_COLOR);
+      };
+    }
+  }, [selected, accentColor]);
 
   const applyHighlight = () => {
-    if (selected) {
-      return;
-    }
-
-    if (accentColor) {
-      document.documentElement.style.setProperty("--accent", accentColor);
-    }
+    if (selected) return;
+    if (accentColor) document.documentElement.style.setProperty("--accent", accentColor);
     highlight(classId);
   };
 
   const removeHighlight = () => {
-    if (selected) {
-      return;
-    }
-
-    document.documentElement.style.setProperty(
-      "--accent",
-      DEFAULT_ACCENT_COLOR
-    );
+    if (selected) return;
+    document.documentElement.style.setProperty("--accent", DEFAULT_ACCENT_COLOR);
     highlight(undefined);
   };
 

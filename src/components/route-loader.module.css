@@ -1,0 +1,47 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+
+  /* velo sutil con tus variables */
+  background: rgba(0,0,0,.06);
+  background: color-mix(in srgb, var(--bg-light) 58%, transparent);
+  backdrop-filter: blur(2px);
+
+  /* transición suave de entrada/salida */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+
+.backdropActive {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Spinner sin bordes (conic-gradient + máscara) */
+.spinner {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: conic-gradient(from 0turn, var(--gold-accent) 0 25%, transparent 25% 100%);
+  -webkit-mask: radial-gradient(circle 52% at 50% 50%, transparent 40%, #000 41%);
+  mask: radial-gradient(circle 52% at 50% 50%, transparent 40%, #000 41%);
+  animation: spin .8s linear infinite;
+}
+
+/* Fallback si el navegador no soporta conic-gradient */
+@supports not (background: conic-gradient(red, blue)) {
+  .spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-dark);
+    border-top-color: var(--gold-accent);
+    animation: spin .8s linear infinite;
+  }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

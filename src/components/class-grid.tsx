@@ -1,11 +1,9 @@
 import c from "classnames";
-import classesJson from "src/data/classes.json";
-
-import { ClassGridItem } from "./class-item";
 import { useRef } from "react";
-
+import { isKeyboardKey } from "src/utils/Keys";
+import classesJson from "src/data/classes.json";
+import { ClassGridItem } from "./class-item";
 import type { CharacterClass, ClassId } from "src/models/character-class";
-
 import styles from "./class-grid.module.css";
 
 type Props = {
@@ -16,15 +14,6 @@ type Props = {
 };
 
 const classes = classesJson as CharacterClass[];
-
-const KEYBOARD_KEYS = [
-  "ArrowRight",
-  "ArrowLeft",
-  "ArrowUp",
-  "ArrowDown",
-  "Escape",
-  "Backspace",
-];
 
 export function ClassGrid({
   selectedClass,
@@ -39,6 +28,7 @@ export function ClassGrid({
     ? classes.filter((cls) => cls.slug === selectedClass)
     : classes;
 
+  // Calcula el índice del elemento actualmente resaltado
   const currentHighlight = () => {
     return selectedClass
       ? items.findIndex((cls) => cls.slug === selectedClass)
@@ -47,19 +37,13 @@ export function ClassGrid({
         );
   };
 
+  // Navegación por teclado en la cuadrícula
   const keyDown = (event: React.KeyboardEvent) => {
-    if (!document.activeElement?.classList.contains(styles.classCell)) {
-      return;
-    }
-
-    if (!KEYBOARD_KEYS.includes(event.key)) {
-      return;
-    }
+    if (!document.activeElement?.classList.contains(styles.classCell)) return;
+    if (!isKeyboardKey(event.key)) return;
 
     const currentIndex = currentHighlight();
-    if (currentIndex < 0) {
-      return;
-    }
+    if (currentIndex < 0) return;
 
     let nextIndex = currentIndex;
     switch (event.key) {
@@ -106,7 +90,6 @@ export function ClassGrid({
             } else {
               itemButtonRefs.current[index] = null;
             }
-
             return () => {
               itemButtonRefs.current[index] = null;
             };
@@ -116,3 +99,4 @@ export function ClassGrid({
     </section>
   );
 }
+

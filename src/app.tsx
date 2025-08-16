@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "src/pages/Home";
-import ClassPage from "src/pages/classpage";
+import Classpage from "src/pages/classpage";
 import NotFound from "src/pages/NotFound";
 
 import { useRouteLoading } from "src/hooks/useRouteLoading"; // ⬅️ NUEVO
@@ -18,8 +18,8 @@ export function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path=":classId" element={<ClassPage />} />
-        <Route path=":classId/:spellId" element={<ClassPage />} />
+        <Route path=":classId" element={<Classpage />} />
+        <Route path=":classId/:spellId" element={<Classpage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

@@ -27,7 +27,7 @@ const CLASS_TO_SPELLS = new Map<ClassId, Set<SpellId>>(
   ])
 );
 
-export default function ClassPage() {
+export default function Classpage() {
   const navigate = useNavigate();
   const { classId, spellId } = useParams<{
     classId?: ClassId;

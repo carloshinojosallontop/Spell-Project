@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "src/pages/Home";
-import Classpage from "src/pages/classpage";
+import Classpage from "./pages/ClassPage";
 import NotFound from "src/pages/NotFound";
 
 import { useRouteLoading } from "src/hooks/useRouteLoading";

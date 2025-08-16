@@ -8,8 +8,8 @@ import { RouteLoader } from "src/components/RouteLoader";
 
 export function App() {
   const loading = useRouteLoading({
-    delayBeforeShow: 120, // ajustable
-    minVisible: 380, // ajustable (similar a tus 400ms)
+    delayBeforeShow: 120, 
+    minVisible: 380,
   });
 
   return (

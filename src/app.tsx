@@ -15,7 +15,6 @@ export function App() {
   return (
     <>
       <RouteLoader active={loading} />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path=":classId" element={<Classpage />} />

@@ -3,8 +3,8 @@ import Home from "src/pages/Home";
 import Classpage from "src/pages/classpage";
 import NotFound from "src/pages/NotFound";
 
-import { useRouteLoading } from "src/hooks/useRouteLoading"; // ⬅️ NUEVO
-import { RouteLoader } from "src/components/RouteLoader"; // ⬅️ NUEVO
+import { useRouteLoading } from "src/hooks/useRouteLoading";
+import { RouteLoader } from "src/components/RouteLoader";
 
 export function App() {
   const loading = useRouteLoading({
